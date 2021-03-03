@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 # Create your views here.
-from learning_logs.models import Topic
+from learning_logs.models import Topic, Entry
 from .forms import TopicForm, EntryForm
 
 
@@ -45,6 +45,7 @@ def new_topic(request):
 def new_entry(request, topic_id):
     """Dodaj nowy wpis."""
     topic = Topic.objects.get(id=topic_id)
+
     if request.method != 'POST':
         # Nie przekazano żadnych danych, należy utworzyć pusty formularz
         form = EntryForm()
@@ -58,3 +59,21 @@ def new_entry(request, topic_id):
             return HttpResponseRedirect(reverse('learning_logs:topic', args=[topic_id]))
     context = {'topic': topic, 'form': form}
     return render(request, 'learning_logs/new_entry.html', context)
+
+
+def edit_entry(request, entry_id):
+    """Edytuj istniejący wpis."""
+    entry = Entry.objects.get(id=entry_id)
+    topic = entry.topic
+
+    if request.method != 'POST':
+        # Żądanie początkowe, wypełnienie formularza aktualną treścią wpisu.
+        form = EntryForm(instance=entry)
+    else:
+        # Przekazano dane za pomocą żądania POST, należy je przetworzyć.
+        form = EntryForm(instance=entry, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('learning_logs:topic', args=[topic.id]))
+    context = {'entry': entry, 'topic': topic, 'form': form}
+    return render(request, 'learning_logs/edit_entry.html', context)

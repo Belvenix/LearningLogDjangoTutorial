@@ -21,4 +21,7 @@ urlpatterns = [
 
     # Strona przeznaczona do dodawania nowego wpisu.
     url(r'^new_entry/(?P<topic_id>\d+)/$', views.new_entry, name='new_entry'),
+
+    # Strona przeznaczona do edycji wpisu.
+    url(r'^edit_entry/(?P<entry_id>\d+)/$', views.edit_entry, name='edit_entry'),
 ]
