@@ -73,6 +73,7 @@ def edit_entry(request, entry_id):
         # Przekazano dane za pomocą żądania POST, należy je przetworzyć.
         form = EntryForm(instance=entry, data=request.POST)
         if form.is_valid():
+            entry.is_edited = True
             form.save()
             return HttpResponseRedirect(reverse('learning_logs:topic', args=[topic.id]))
     context = {'entry': entry, 'topic': topic, 'form': form}

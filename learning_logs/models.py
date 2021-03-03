@@ -16,6 +16,7 @@ class Entry(models.Model):
     """Konkretne informacje o postępie w nauce."""
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     text = models.TextField()
+    is_edited = models.BooleanField(default=False)
     date_added = models.DateTimeField(auto_now_add=True)
 
     class Meta:
